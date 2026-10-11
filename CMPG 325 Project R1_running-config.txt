@@ -1,0 +1,157 @@
+R1#show running-config
+Building configuration...
+
+Current configuration : 2682 bytes
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname R1
+!
+!
+!
+enable secret 5 $1$mERr$E7caOK2vtkMWzDra1tnkJ.
+!
+!
+ip dhcp excluded-address 10.15.10.1 10.15.10.9
+ip dhcp excluded-address 10.15.30.1 10.15.30.9
+ip dhcp excluded-address 10.15.40.1 10.15.40.9
+ip dhcp excluded-address 10.15.60.1 10.15.60.9
+!
+ip dhcp pool VLAN10_MGMT
+ network 10.15.10.0 255.255.255.0
+ default-router 10.15.10.1
+ dns-server 8.8.8.8
+ip dhcp pool VLAN30_TELLERS
+ network 10.15.30.0 255.255.255.0
+ default-router 10.15.30.1
+ dns-server 8.8.8.8
+ip dhcp pool VLAN40_LOANS
+ network 10.15.40.0 255.255.255.0
+ default-router 10.15.40.1
+ dns-server 8.8.8.8
+ip dhcp pool VLAN60_GUEST
+ network 10.15.60.0 255.255.255.0
+ default-router 10.15.60.1
+ dns-server 8.8.8.8
+!
+!
+!
+no ip cef
+no ipv6 cef
+!
+!
+!
+username admin privilege 15 secret 5 $1$mERr$2XSzvtLwfufDgC7UdEy4M0
+!
+!
+license udi pid CISCO2911/K9 sn FTX1524NIK2-
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip ssh version 2
+no ip domain-lookup
+ip domain-name bokamoso.local
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0.10
+ encapsulation dot1Q 10
+ ip address 10.15.10.1 255.255.255.0
+!
+interface GigabitEthernet0/0.20
+ encapsulation dot1Q 20
+ ip address 10.15.20.1 255.255.255.0
+ ip access-group BLOCK_FINANCE out
+!
+interface GigabitEthernet0/0.99
+ encapsulation dot1Q 99 native
+ ip address 10.15.99.1 255.255.255.128
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1.30
+ encapsulation dot1Q 30
+ ip address 10.15.30.1 255.255.255.0
+!
+interface GigabitEthernet0/1.40
+ encapsulation dot1Q 40
+ ip address 10.15.40.1 255.255.255.0
+!
+interface GigabitEthernet0/1.50
+ encapsulation dot1Q 50
+ ip address 10.15.50.1 255.255.255.0
+!
+interface GigabitEthernet0/1.60
+ encapsulation dot1Q 60
+ ip address 10.15.60.1 255.255.255.0
+!
+interface GigabitEthernet0/1.99
+ encapsulation dot1Q 99 native
+ ip address 10.15.99.129 255.255.255.128
+!
+interface GigabitEthernet0/2
+ ip address 203.0.113.1 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+ip classless
+!
+ip flow-export version 9
+!
+!
+ip access-list extended BLOCK_FINANCE
+ deny ip 10.15.10.0 0.0.0.255 10.15.20.0 0.0.0.255
+ deny ip 10.15.30.0 0.0.0.255 10.15.20.0 0.0.0.255
+ deny ip 10.15.40.0 0.0.0.255 10.15.20.0 0.0.0.255
+ deny ip 10.15.60.0 0.0.0.255 10.15.20.0 0.0.0.255
+ permit ip any any
+!
+banner motd ^CAuthorized access only - Bokamoso Savings & Credit Union^C
+!
+!
+!
+!
+line con 0
+ logging synchronous
+!
+line aux 0
+!
+line vty 0 4
+ login local
+ transport input ssh
+!
+!
+!
+end
+
+
+R1#
